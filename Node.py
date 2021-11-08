@@ -11,11 +11,11 @@ class Node:
         self.index = index
         self.coords = Coordinates(x, y)
         self.score = 0
-        self.neighboors = {}
+        self.neighbors = {}
 
     def increment_score() -> None:
         self.score += 1
 
-    def remove_neighboor(self, node: Node) -> None:
-        if node.index in self.neighboors:
-            self.neighboors.pop(node.index, None)
+    def remove_neighbor(self, node) -> None:
+        if node.index in self.neighbors:
+            self.neighbors.pop(node.index, None)

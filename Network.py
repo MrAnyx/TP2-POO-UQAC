@@ -2,6 +2,9 @@ import json
 from Node import Node
 import random
 import math
+import numpy as np
+import networkx as nx
+import matplotlib.pyplot as plt
 
 
 class Network:
@@ -38,10 +41,10 @@ class Network:
 
     def _add_link_between_nodes(self, A: Node, B: Node) -> None:
         distance = self._calculate_distance(A, B)
-        B.neighboors[A.index] = distance
-        A.neighboors[B.index] = distance
+        B.neighbors[A.index] = distance
+        A.neighbors[B.index] = distance
 
-    def _add_neightboors(self, node: Node) -> None:
+    def _add_neightbors(self, node: Node) -> None:
         if len(self.nodes) == 1:
             # Dans tous les cas, on lie la nouvelle node à la précédente
             prev = self.nodes[0]  # Node précédente
@@ -49,11 +52,9 @@ class Network:
 
         else:
             # Pour éviter de shuffle la liste de nodes elle-même
-            random_nodes_link = self.nodes
-            random.shuffle(random_nodes_link)
-            random_nodes_link = random_nodes_link[
-                0 : random.randint(1, min(3, len(random_nodes_link) - 1))
-            ]
+            random_nodes_link = random.sample(
+                self.nodes, random.randint(1, min(5, len(self.nodes)))
+            )
             # On ajoute de manière aléatoire entre 0 et le minimum entre 3 et la taille du graph
             for other_node in random_nodes_link:
                 self._add_link_between_nodes(other_node, node)
@@ -63,7 +64,7 @@ class Network:
             self.nodes.append(node)
 
         else:
-            self._add_neightboors(node)
+            self._add_neightbors(node)
             self.nodes.append(node)
 
     def _generate_random_graph(self) -> None:
@@ -80,10 +81,24 @@ class Network:
             self._add_node(node)
 
     def pretty_print(self):
-        result = {"nodes": {}}
+        result = {"arcs": {}}
         for node in self.nodes:
-            result["nodes"][node.index] = node.neighboors
+            result["arcs"][node.index] = node.neighbors
 
         result["start"] = self.start
         result["end"] = self.end
         print(json.dumps(result, sort_keys=False, indent=3))
+
+    def plot_print(self):
+        mat = []
+        for i in range(self.nb_nodes):
+            liste_adjacence = np.zeros(self.nb_nodes)
+            for neighbor, distance in self.nodes[i].neighbors.items():
+                liste_adjacence[neighbor] = 1
+
+            mat.append(liste_adjacence)
+
+        A = np.matrix(mat)
+        G = nx.from_numpy_matrix(A)
+        nx.draw(G)
+        plt.show()
