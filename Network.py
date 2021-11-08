@@ -80,6 +80,19 @@ class Network:
             node = Node(index=i, coords=[y, x])
             self._add_node(node)
 
+    def remove_random_node(self):
+        node_index = random.randint(0, len(self.nodes) - 1)
+
+        while node_index == self.start or node_index == self.end:
+            node_index = random.randint(0, len(self.nodes) - 1)
+
+        node_to_remove = self.nodes[node_index]
+
+        for node in self.nodes:
+            node.remove_neighbor(node_to_remove)
+
+        self.nodes.pop(node_index)
+
     def pretty_print(self):
         result = {"arcs": {}}
         for node in self.nodes:
@@ -91,9 +104,9 @@ class Network:
 
     def plot_print(self):
         mat = []
-        for i in range(self.nb_nodes):
-            liste_adjacence = np.zeros(self.nb_nodes)
-            for neighbor, distance in self.nodes[i].neighbors.items():
+        for node in self.nodes:
+            liste_adjacence = np.zeros(len(self.nodes))
+            for neighbor, distance in node.neighbors.items():
                 liste_adjacence[neighbor] = 1
 
             mat.append(liste_adjacence)

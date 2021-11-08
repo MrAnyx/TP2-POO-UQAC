@@ -4,6 +4,12 @@
 from Network import Network
 from Node import Node
 
-network = Network(nb_nodes=20, distance_threshold=35)
+NB_MESSAGES = 10
+NB_NODES = 30
+
+network = Network(nb_nodes=NB_NODES, distance_threshold=50)
+# network.pretty_print()
+# network.remove_random_node()
 network.pretty_print()
-network.plot_print()
+
+# network.plot_print()
