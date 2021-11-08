@@ -16,6 +16,6 @@ class Node:
     def increment_score() -> None:
         self.score += 1
 
-    def remove_neighbor(self, node) -> None:
-        if node.index in self.neighbors:
-            self.neighbors.pop(node.index, None)
+    def remove_neighbor(self, node_index: int) -> None:
+        if node_index in self.neighbors:
+            self.neighbors.pop(node_index, None)

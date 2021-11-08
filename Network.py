@@ -10,12 +10,16 @@ import matplotlib.pyplot as plt
 class Network:
     def __init__(self, nb_nodes: int = 30, distance_threshold: int = 35) -> None:
         self.nb_nodes = nb_nodes
+        self.nb_nodes_initial = nb_nodes
         self.nodes = []
         self.distance_threshold = distance_threshold
 
         start_end = self._generate_start_and_end_nodes()
         self.start = start_end["start"]
         self.end = start_end["end"]
+
+        self.nodes_index_removed = []
+        self.nodes_index_in_list_removed = []
 
         self._generate_random_graph()
 
@@ -81,22 +85,33 @@ class Network:
             self._add_node(node)
 
     def remove_random_node(self):
-        node_index = random.randint(0, len(self.nodes) - 1)
+        node_to_remove = random.sample(self.nodes, 1)[0]
 
-        while node_index == self.start or node_index == self.end:
-            node_index = random.randint(0, len(self.nodes) - 1)
+        while node_to_remove.index == self.start or node_to_remove.index == self.end:
+            node_to_remove = random.sample(self.nodes, 1)[0]
 
-        node_to_remove = self.nodes[node_index]
+        print(self.get_node_index_in_nodes_list(node_to_remove.index))
+        # TODO ça marche pas lol
 
         for node in self.nodes:
-            node.remove_neighbor(node_to_remove)
+            node.remove_neighbor(node_to_remove.index)
 
-        self.nodes.pop(node_index)
+        # self.nodes.pop(self.get_node_index_in_nodes_list(node_to_remove.index))
+        # self.nb_nodes -= 1
+        # self.nodes_index_removed.append(node_to_remove.index)
+        # self.nodes_index_in_list_removed.append(
+        #     self.get_node_index_in_nodes_list(node_to_remove.index)
+        # )
+        print("Node with index :", node_to_remove.index, "has been removed")
 
     def pretty_print(self):
-        result = {"arcs": {}}
+        result = {"nodes": {}}
         for node in self.nodes:
-            result["arcs"][node.index] = node.neighbors
+            result["nodes"][node.index] = {
+                "neighbors": node.neighbors,
+                "coords": [node.coords.y, node.coords.x],
+                "score": node.score,
+            }
 
         result["start"] = self.start
         result["end"] = self.end
@@ -104,14 +119,68 @@ class Network:
 
     def plot_print(self):
         mat = []
+        pos = []
         for node in self.nodes:
-            liste_adjacence = np.zeros(len(self.nodes))
+            pos.append([node.coords.x, node.coords.y])
+            liste_adjacence = np.zeros(self.nb_nodes_initial)
             for neighbor, distance in node.neighbors.items():
                 liste_adjacence[neighbor] = 1
 
             mat.append(liste_adjacence)
 
         A = np.matrix(mat)
-        G = nx.from_numpy_matrix(A)
-        nx.draw(G)
-        plt.show()
+        print(self.nodes_index_in_list_removed)
+        print(self.nodes_index_removed)
+
+        # for k in self.nodes_index_in_list_removed:
+        #     A = np.delete(A, k, 1)
+
+        # G = nx.from_numpy_matrix(A)
+
+        # labels = {}
+        # for node in G.nodes():
+        #     labels[node] = self.nodes[node].index
+
+        # nx.draw_networkx(G, pos, with_labels=False)
+        # nx.draw_networkx_labels(G, pos, labels, font_size=10, font_color="black")
+        # plt.show()
+
+    def get_node_by_index(self, index: int):
+        for node in self.nodes:
+            if node.index == index:
+                return node
+
+    def get_node_index_in_nodes_list(self, node_index: int):
+        for i in range(self.nb_nodes):
+            if self.nodes[i].index == node_index:
+                return i
+
+    def custom_depth_first_search(self, start_index: int, path: list = []):
+        start_node = self.get_node_by_index(start_index)
+        path = path + [start_index]
+
+        if start_index == self.end:
+            return path
+
+        shortest_path = None
+
+        # Pour chaque voisin de la pièce actuelle placée en paramètre
+        for neighbors_index, distance in start_node.neighbors.items():
+
+            # On vérifie si la pièce est dans la liste des éléments déjà visités
+            if neighbors_index not in path and distance < self.distance_threshold:
+
+                # On appelle de manière récurssive l'algorithme DFS avec un pièce de départ, le premier voisin de la pièce actuelle
+                _tmp_path = self.custom_depth_first_search(neighbors_index, path)
+
+                # Si on chemin est retourné par la fonction
+                if _tmp_path:
+
+                    # On le compare avec le chemin le plus court précédemment sauvegardé
+                    if not shortest_path or len(_tmp_path) < len(shortest_path):
+
+                        # Si le nouveau chemin est plus court, on le conserve et un supprime l'ancien
+                        shortest_path = _tmp_path
+
+        # On retourne le chemin le plus court
+        return shortest_path
