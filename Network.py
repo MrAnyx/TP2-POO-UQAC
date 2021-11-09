@@ -194,5 +194,6 @@ class Network:
         return shortest_path
 
     def custom_dijkstra(self):
+        # TODO Implémenter cette méthode
         # https://www.youtube.com/watch?v=pVfj6mxhdMw
         pass
