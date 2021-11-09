@@ -8,23 +8,11 @@ NB_MESSAGES = 10
 NB_NODES = 10
 
 network = Network(nb_nodes=NB_NODES, distance_threshold=20)
-# network.pretty_print()
-
-# print(f"network length : {len(network.nodes)}")
-network.remove_random_node()
-network.remove_random_node()
-network.remove_random_node()
-network.remove_random_node()
 # network.remove_random_node()
-# print(f"network length : {len(network.nodes)}")
-
 # network.pretty_print()
 
-# best_path = network.custom_depth_first_search(network.start)
-# print("Best path = ", best_path)
-# print("Starting at index : ", network.start)
-# print("Ending at index : ", network.end)
-
+best_path = network.custom_depth_first_search(network.start)
+print("Best path = ", best_path)
 
 # network.pretty_print()
-# network.plot_print()
+network.plot_print(best_path)

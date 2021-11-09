@@ -90,18 +90,17 @@ class Network:
         while node_to_remove.index == self.start or node_to_remove.index == self.end:
             node_to_remove = random.sample(self.nodes, 1)[0]
 
-        print(self.get_node_index_in_nodes_list(node_to_remove.index))
         # TODO ça marche pas lol
 
         for node in self.nodes:
             node.remove_neighbor(node_to_remove.index)
 
-        # self.nodes.pop(self.get_node_index_in_nodes_list(node_to_remove.index))
-        # self.nb_nodes -= 1
-        # self.nodes_index_removed.append(node_to_remove.index)
-        # self.nodes_index_in_list_removed.append(
-        #     self.get_node_index_in_nodes_list(node_to_remove.index)
-        # )
+        self.nodes_index_removed.append(node_to_remove.index)
+        self.nodes_index_in_list_removed.append(
+            self.get_node_index_in_nodes_list(node_to_remove.index)
+        )
+        self.nodes.pop(self.get_node_index_in_nodes_list(node_to_remove.index))
+        self.nb_nodes -= 1
         print("Node with index :", node_to_remove.index, "has been removed")
 
     def pretty_print(self):
@@ -117,9 +116,12 @@ class Network:
         result["end"] = self.end
         print(json.dumps(result, sort_keys=False, indent=3))
 
-    def plot_print(self):
+    def plot_print(self, path: list = []):
         mat = []
         pos = []
+        labels = {}
+        color_map = []
+
         for node in self.nodes:
             pos.append([node.coords.x, node.coords.y])
             liste_adjacence = np.zeros(self.nb_nodes_initial)
@@ -129,21 +131,27 @@ class Network:
             mat.append(liste_adjacence)
 
         A = np.matrix(mat)
-        print(self.nodes_index_in_list_removed)
-        print(self.nodes_index_removed)
 
-        # for k in self.nodes_index_in_list_removed:
-        #     A = np.delete(A, k, 1)
+        for k in self.nodes_index_in_list_removed:
+            A = np.delete(A, k, 1)
 
-        # G = nx.from_numpy_matrix(A)
+        G = nx.from_numpy_matrix(A)
 
-        # labels = {}
-        # for node in G.nodes():
-        #     labels[node] = self.nodes[node].index
+        for node in G.nodes():
+            labels[node] = self.nodes[node].index
+            if self.nodes[node].index == self.start:
+                color_map.append("#008080")
+            elif self.nodes[node].index == self.end:
+                color_map.append("#f2353b")
+            else:
+                if self.nodes[node].index in path:
+                    color_map.append("#ed5a2e")
+                else:
+                    color_map.append("#6a6a77")
 
-        # nx.draw_networkx(G, pos, with_labels=False)
-        # nx.draw_networkx_labels(G, pos, labels, font_size=10, font_color="black")
-        # plt.show()
+        nx.draw_networkx(G, pos, node_color=color_map, with_labels=False)
+        nx.draw_networkx_labels(G, pos, labels, font_size=10, font_color="black")
+        plt.show()
 
     def get_node_by_index(self, index: int):
         for node in self.nodes:
@@ -184,3 +192,7 @@ class Network:
 
         # On retourne le chemin le plus court
         return shortest_path
+
+    def custom_dijkstra(self):
+        # https://www.youtube.com/watch?v=pVfj6mxhdMw
+        pass
