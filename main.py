@@ -12,26 +12,42 @@ DISTANCE_THRESHOLD = NB_NODES / 3
 
 network = Network(nb_nodes=NB_NODES, distance_threshold=DISTANCE_THRESHOLD)
 
-print(network.get_average_distance())
-
 # shortest_path = network.custom_depth_first_search(network.start)
 
-# print(f"Start : {network.start}")
-# print(f"End : {network.end}")
-# print()
+print(f"Start : {network.start}")
+print(f"End : {network.end}")
 
-# for i in range(NB_MESSAGES):
 
-#     # 1 chance sur 3 pour que un des noeuds du réseaux tombe en panne et ne soit plus accessible
-#     if random.randint(1, 3) == 1:
-#         network.remove_random_node()
+for i in range(NB_MESSAGES):
 
-#     shortest_path = network.custom_dijkstra()
-#     if shortest_path:
-#         print(f"Path for message {i} :", shortest_path)
+    """
+    Si aucun chemin n'existe
+        On trouve le chemin le plus court
+    Si un chemin existe
+        Si il est atteignable
+            On envoie le message
+            On affiche les infos du chemin et de la distance
+        Si il n'est pas atteignable
+            On set le chemin à None
+            On affiche un message disant que le message n'est pas atteignable
+            On affiche un message pour dire que le message a été perdu mais à donné l'information que le chemin n'était pas accessible
+    """
 
-#     else:
-#         print(f"No path found for message {i}")
-#         network.plot_print()
-#         #   network.pretty_print()
-#         break
+    # 1 chance sur 3 pour que un des noeuds du réseaux tombe en panne et ne soit plus accessible
+    if random.randint(1, 2) == 1:
+        network.remove_random_node()
+
+    # Si aucun chemin n'a été n'existe pour le moment
+    shortest_path = network.custom_dijkstra()
+
+    # Si un chemin a été trouvé avec Dijkstra
+    if shortest_path:
+        # La distance est exprimé en Km
+        print(
+            f"Path for message {i} : {shortest_path['path']} -> {shortest_path['distance']} Km"
+        )
+
+    else:
+        print(f"No path found for message {i}")
+        # network.plot_print()
+        # network.pretty_print()

@@ -201,8 +201,6 @@ class Network:
         while len(unvisited) != 0:
             current_index = self._get_node_by_min_distance(process, visited)
 
-            # TODO Si le graph n'est plus connexe, ça ne veut pas dire qu'il n'existe pas de chemin
-
             for neighbor_index, neighbor_distance in unvisited[
                 current_index
             ].neighbors.items():
@@ -215,6 +213,7 @@ class Network:
 
         path = []
         tmp_index = self.end
+        distance = round(process[self.end]["distance"], 2)
         while tmp_index != self.start:
             if process[tmp_index]["predecessor"] != None:
                 path.append(tmp_index)
@@ -225,7 +224,7 @@ class Network:
         # TODO Retourner la distance entre le départ et l'arrivée
         path.append(self.start)
         path.reverse()
-        return path
+        return {"path": path, "distance": distance}
 
     def _get_node_by_min_distance(self, process: dict, visited: list) -> list:
         # On récupère le noeud avec la distance la plus faible avec le noeud de départ
@@ -248,3 +247,15 @@ class Network:
                 nb_nodes += 1
 
         return total_distance / nb_nodes
+
+    def send_message(self, path: list):
+        # On va récupérer l'élément i et i+1 donc ne prend le dernier élément
+        for i in range(len(path) - 2):
+            current_node = self.get_node_by_index(path[i])
+            # next_node = self.get_node_by_index(path[i+1])
+
+            distance = current_node.neighbors[path[i + 1]]
+            if distance > self.distance_threshold:
+                return False
+
+        return True
