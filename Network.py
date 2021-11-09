@@ -49,27 +49,19 @@ class Network:
         A.neighbors[B.index] = distance
 
     def _add_neightbors(self, node: Node) -> None:
-        if len(self.nodes) == 1:
-            # Dans tous les cas, on lie la nouvelle node à la précédente
-            prev = self.nodes[0]  # Node précédente
-            self._add_link_between_nodes(prev, node)
-
-        else:
-            # Pour éviter de shuffle la liste de nodes elle-même
-            random_nodes_link = random.sample(
-                self.nodes, random.randint(1, min(5, len(self.nodes)))
-            )
-            # On ajoute de manière aléatoire entre 0 et le minimum entre 3 et la taille du graph
-            for other_node in random_nodes_link:
-                self._add_link_between_nodes(other_node, node)
+        # Pour éviter de shuffle la liste de nodes elle-même
+        random_nodes_link = random.sample(
+            self.nodes, random.randint(1, min(10, len(self.nodes)))
+        )
+        # On ajoute de manière aléatoire entre 0 et le minimum entre 3 et la taille du graph
+        for other_node in random_nodes_link:
+            self._add_link_between_nodes(other_node, node)
 
     def _add_node(self, node: Node) -> None:
-        if len(self.nodes) == 0:
-            self.nodes.append(node)
-
-        else:
+        if len(self.nodes) > 0:
             self._add_neightbors(node)
-            self.nodes.append(node)
+
+        self.nodes.append(node)
 
     def _generate_random_graph(self) -> None:
         assigned = []
@@ -87,10 +79,11 @@ class Network:
     def remove_random_node(self):
         node_to_remove = random.sample(self.nodes, 1)[0]
 
+        if self.nb_nodes == 2:
+            return
+
         while node_to_remove.index == self.start or node_to_remove.index == self.end:
             node_to_remove = random.sample(self.nodes, 1)[0]
-
-        # TODO ça marche pas lol
 
         for node in self.nodes:
             node.remove_neighbor(node_to_remove.index)
@@ -194,6 +187,64 @@ class Network:
         return shortest_path
 
     def custom_dijkstra(self):
-        # TODO Implémenter cette méthode
-        # https://www.youtube.com/watch?v=pVfj6mxhdMw
-        pass
+
+        unvisited = {}
+        visited = []
+        process = {}
+
+        for node in self.nodes:
+            unvisited[node.index] = node
+            process[node.index] = {"distance": float("inf"), "predecessor": None}
+
+        process[self.start]["distance"] = 0
+
+        while len(unvisited) != 0:
+            current_index = self._get_node_by_min_distance(process, visited)
+
+            # TODO Si le graph n'est plus connexe, ça ne veut pas dire qu'il n'existe pas de chemin
+
+            for neighbor_index, neighbor_distance in unvisited[
+                current_index
+            ].neighbors.items():
+                dist_from_start = process[current_index]["distance"] + neighbor_distance
+                if dist_from_start < process[neighbor_index]["distance"]:
+                    process[neighbor_index]["distance"] = dist_from_start
+                    process[neighbor_index]["predecessor"] = current_index
+            visited.append(current_index)
+            unvisited.pop(current_index, None)
+
+        path = []
+        tmp_index = self.end
+        while tmp_index != self.start:
+            if process[tmp_index]["predecessor"] != None:
+                path.append(tmp_index)
+                tmp_index = process[tmp_index]["predecessor"]
+            else:
+                return None
+
+        # TODO Retourner la distance entre le départ et l'arrivée
+        path.append(self.start)
+        path.reverse()
+        return path
+
+    def _get_node_by_min_distance(self, process: dict, visited: list) -> list:
+        # On récupère le noeud avec la distance la plus faible avec le noeud de départ
+        _min_distance = float("inf")
+        _min_index = None
+        for node_index, process in process.items():
+            if process["distance"] <= _min_distance and node_index not in visited:
+                _min_distance = process["distance"]
+                _min_index = node_index
+
+        return _min_index
+
+    def get_average_distance(self):
+        total_distance = 0
+        nb_nodes = 0
+
+        for node in self.nodes:
+            for neighbor, distance in node.neighbors.items():
+                total_distance += distance
+                nb_nodes += 1
+
+        return total_distance / nb_nodes
