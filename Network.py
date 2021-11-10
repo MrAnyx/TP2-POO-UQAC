@@ -94,7 +94,7 @@ class Network:
         )
         self.nodes.pop(self.get_node_index_in_nodes_list(node_to_remove.index))
         self.nb_nodes -= 1
-        print("Node with index :", node_to_remove.index, "has been removed")
+        print(f"Node with index : {node_to_remove.index} has been removed")
 
     def pretty_print(self):
         result = {"nodes": {}}
@@ -151,10 +151,14 @@ class Network:
             if node.index == index:
                 return node
 
+        return None
+
     def get_node_index_in_nodes_list(self, node_index: int):
         for i in range(self.nb_nodes):
             if self.nodes[i].index == node_index:
                 return i
+
+        return None
 
     def custom_depth_first_search(self, start_index: int, path: list = []):
         start_node = self.get_node_by_index(start_index)
@@ -221,7 +225,6 @@ class Network:
             else:
                 return None
 
-        # TODO Retourner la distance entre le départ et l'arrivée
         path.append(self.start)
         path.reverse()
         return {"path": path, "distance": distance}
@@ -248,14 +251,52 @@ class Network:
 
         return total_distance / nb_nodes
 
-    def send_message(self, path: list):
+    def is_path_reachable(self, path: dict):
+
+        if not path:
+            return {"valid": False, "reason": "path_missing"}
+
         # On va récupérer l'élément i et i+1 donc ne prend le dernier élément
-        for i in range(len(path) - 2):
-            current_node = self.get_node_by_index(path[i])
-            # next_node = self.get_node_by_index(path[i+1])
+        for i in range(len(path["path"]) - 2):
+            current_node = self.get_node_by_index(path["path"][i])
+            if current_node and path["path"][i + 1] in current_node.neighbors:
+                distance = current_node.neighbors[path["path"][i + 1]]
+                if distance > self.distance_threshold:
+                    return {"valid": False, "reason": "distance"}
+            else:
+                return {"valid": False, "reason": "missing"}
 
-            distance = current_node.neighbors[path[i + 1]]
-            if distance > self.distance_threshold:
-                return False
+        return {"valid": True, "reason": "ok"}
 
-        return True
+    def send_message(self, path: dict, message_num: int):
+        for node_index in path["path"]:
+            node = self.get_node_by_index(node_index)
+            node.score += 1
+
+        # La distance est exprimé en Km
+        print(
+            f"Path for message {message_num} : {path['path']} -> {path['distance']} Km"
+        )
+
+    def display_error_message(self, path_validity: dict, message_num: int):
+        if path_validity["reason"] == "distance":
+            print(f"Error on messgae {message_num} : Distance between 2 nodes too high")
+        elif path_validity["reason"] == "missing":
+            print(f"Error on message {message_num} : Unknown node")
+        elif path_validity["reason"] == "path_missing":
+            print(f"Error on message {message_num} : No path found")
+
+    def get_nodes_with_highest_score(self):
+        _max_index = None
+        _max_score = 0
+        for i in range(self.nb_nodes):
+            if self.nodes[i].score > _max_score:
+                _max_score = self.nodes[i].score
+                _max_index = i
+
+        highest_score_nodes = []
+        for node in self.nodes:
+            if node.score == _max_score:
+                highest_score_nodes.append(node.index)
+
+        return {"nodes": highest_score_nodes, "score": _max_score}
