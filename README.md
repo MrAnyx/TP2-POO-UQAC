@@ -54,7 +54,6 @@ Comme nous avons pu l'évoquer, le but est de transmettre *n* messages entre deu
 
 ```python
 network = Network(nb_nodes=NB_NODES, distance_threshold=DISTANCE_THRESHOLD)
-py
 ```
 
 Dans un premier temps, nous commençons pas créer un graphe aléatoire en utilisant la méthode que nous avons décrite précédemment.
