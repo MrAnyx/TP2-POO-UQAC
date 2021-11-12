@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 class Network:
-    def __init__(self, nb_nodes: int = 30, distance_threshold: int = 35) -> None:
+    def __init__(self, nb_nodes: int = 20, distance_threshold: int = 10) -> None:
         self.nb_nodes = nb_nodes
         self.nb_nodes_initial = nb_nodes
         self.nodes = []

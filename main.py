@@ -3,12 +3,12 @@ from Node import Node
 import random
 
 
-NB_MESSAGES = 100
+NB_MESSAGES = 20
 NB_NODES = 200
 
-# En moyenne, les noeuds du graph de NB_NODES / 2 unités de distance
+# En moyenne, les noeuds du graph sont espacés de NB_NODES / 2 unités de distance
 # On va volontairement mettre une valeur plus faible pour que certains message ne puissent pas transiter entre deux noeuds
-DISTANCE_THRESHOLD = NB_NODES / 2
+DISTANCE_THRESHOLD = NB_NODES / 2.2
 
 network = Network(nb_nodes=NB_NODES, distance_threshold=DISTANCE_THRESHOLD)
 
