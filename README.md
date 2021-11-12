@@ -52,7 +52,47 @@ Au sein de notre réseau, nous devons également sauvegarder certains paramètre
 
 Comme nous avons pu l'évoquer, le but est de transmettre *n* messages entre deux noeuds d'un graphe. Le chemin doit être le plus court possible et la distance entre chaque noeud du chemin doit être inférieure au seuil que nous allons définir.
 
+```python
+network = Network(nb_nodes=NB_NODES, distance_threshold=DISTANCE_THRESHOLD)
+py
+```
 
+Dans un premier temps, nous commençons pas créer un graphe aléatoire en utilisant la méthode que nous avons décrite précédemment.
+
+```python
+shortest_path = None
+```
+
+Nous déclarons et initialisons ensuite notre variable `shortest_path` afin de pouvoir conserver le plus cours chemin d'un envoie d'un message à un autre.
+
+Nos variables principales étant définies, nous allons maintenant pouvoir passer au coeur du programme : la logique de sélection du chemin et l'envoi des messages. Toute cette logique est implémentée dans une boucle for qui boucle *k* fois, *k* étant le nombre de message que l'on souhaite envoyer.
+
+Pour rappel, l'idée de cet exercice est de simuler l'envoie de plusieurs message entre deux points pendant une catastrophe naturelle.
+
+```python
+if random.randint(1, 2) == 1:
+   network.remove_random_node()
+```
+
+Nous avons donc décidé de, de manière aléatoire, supprimer un noeud du graphe afin de simuler l'inaccessibilité d'une ville de la région pendant l'envoie des messages. Ainsi, à chaque envoie d'un nouveau message, nous avons une probabilité de 0.5 qu'un noeud soit supprimé du graphe. Le noeud sélectionné et supprimé sera, bien évidemment, différent de ceux de départ et d'arrivé.
+
+Ensuite, dans le cas ou il n'existe aucun chemin optimal entre les deux points, nous essayons d'en déterminer un. Pour ce faire, nous avons utilisé l'algorithme de **Dijkstra**. Cet algorithme est idéal dans ce cas de figure car il permet, précisement, de déterminer le chemin le plus court dans un graphe connexe.
+
+`Brève descrption de Dijkstra`
+
+Après avoir déterminé notre chemin, deux cas de figures peuvent se présenter :
+
+*   Après avoir supprimé un certain nombre de noeuds du graphe, il est possible que celui-ci devienne non-connexe et que les noeuds de départ et d'arrivé soient dans deux sous-graphe différent. Dans ce cas, aucun chemin n'existe.
+
+*   L'algorithme de Dijkstra trouve un chemin optimal entre les deux points mais la distance entre deux noeuds est supérieur au seuil de distance. Dans ce cas, le message ne peut pas transiter entre les deux noeuds impliqué et donc, le chemin n'est pas valide.
+
+Ainsi, si aucun chemin n'existe ou s'il n'est pas valide, alors le message est perdu. Il faudra alors attendre le prochain envoie d'un message pour réessayer de trouver un chemin optimal.
+
+### Optimisation
+
+Pour des raisons de performances, nous avons dû optimiser notre algorithme. En effet, plutôt que de re-calculer le chemin optimal à chaque envoie d'un message, nous avons opté pour une approche légerement différente.
+
+`On détermine un nouveau chemin que si le chemin précédent n'est pas valide`
 
 ## Description des classes
 
