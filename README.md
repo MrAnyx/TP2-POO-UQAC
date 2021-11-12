@@ -77,7 +77,7 @@ Nous avons donc décidé de, de manière aléatoire, supprimer un noeud du graph
 
 Ensuite, dans le cas ou il n'existe aucun chemin optimal entre les deux points, nous essayons d'en déterminer un. Pour ce faire, nous avons utilisé l'algorithme de **Dijkstra**. Cet algorithme est idéal dans ce cas de figure car il permet, précisement, de déterminer le chemin le plus court dans un graphe connexe.
 
-`Brève descrption de Dijkstra`
+L'algorithme de Dijkstra est relativement simple à comprendre. 
 
 Après avoir déterminé notre chemin, deux cas de figures peuvent se présenter :
 
@@ -91,7 +91,9 @@ Ainsi, si aucun chemin n'existe ou s'il n'est pas valide, alors le message est p
 
 Pour des raisons de performances, nous avons dû optimiser notre algorithme. En effet, plutôt que de re-calculer le chemin optimal à chaque envoie d'un message, nous avons opté pour une approche légerement différente.
 
-`On détermine un nouveau chemin que si le chemin précédent n'est pas valide`
+En effet, nous re-calculons un nouveau chemin avec l'algorithme de Dijkstra dès que notre chemin n'est plus valide. Autrement-dit, tant que notre chemin existe et est valide, nous le concervons pour envoyer les messages du point de départ au point d'arrivé. Malheureusement, dès lors ou un chemin n'est pas valide, nous perdons un message. En d'autres termes, si nous avons déterminé un chemin valide lors de l'envoie du message 1, puis que, de manière aléatoire, lors de l'envoie du message 23, un noeud de ce chemin n'est plus accessible, alors ce même message 23 sera perdu. Toutefois, la perte de ce message donnera l'information au réseau afin de re-calculer un nouveau chemin lors de l'envoie du prochain message.
+
+Ainsi, tant que les noeuds du chemin déterminé lors de l'envoie du premier message existent, alors nous n'aurons qu'à déterminer un seul chemin optimal ce augmente les performances générales de la simulation.
 
 ## Description des classes
 
@@ -101,4 +103,4 @@ Pour des raisons de performances, nous avons dû optimiser notre algorithme. En 
 
 ### Network.py
 
-## Installation et exécution
+## Installation et
