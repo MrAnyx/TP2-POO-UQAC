@@ -4,21 +4,13 @@ import random
 
 
 NB_MESSAGES = 20
-NB_NODES = 10
+NB_NODES = 6
 
 # En moyenne, les noeuds du graph sont espacés de NB_NODES / 2 unités de distance
 # On va volontairement mettre une valeur plus faible pour que certains message ne puissent pas transiter entre deux noeuds
 DISTANCE_THRESHOLD = NB_NODES / 2.2
 
 network = Network(nb_nodes=NB_NODES, distance_threshold=DISTANCE_THRESHOLD)
-
-network.plot_print()
-# network.pretty_print()
-
-# shortest_path = network.custom_depth_first_search(network.start)
-
-# print(f"Start : {network.start}")
-# print(f"End : {network.end}")
 
 shortest_path = None
 
@@ -43,15 +35,22 @@ for i in range(NB_MESSAGES):
     if random.randint(1, 2) == 1:
         network.remove_random_node()
 
+    # Si aucun chemin n'existe
     if not shortest_path:
         shortest_path = network.custom_dijkstra()
 
+    # On vérifie la validité du chemin
     path_validity = network.is_path_reachable(path=shortest_path)
+
+    # Si il est valide
     if path_validity["valid"]:
+        # On envoie le message
         network.send_message(path=shortest_path, message_num=i)
 
+    # S'il n'est pas valide
     else:
         shortest_path = None
         network.display_error_message(path_validity=path_validity, message_num=i)
 
+# On affiche le ou les noeuds ayant le score le plus élevé
 print(network.get_nodes_with_highest_score())
