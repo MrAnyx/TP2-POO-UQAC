@@ -271,3 +271,8 @@ pip install matplotlib
 Et voila !
 
 Il ne reste plus qu'à lancer le fichier `main.py`  ou `main_single_message.py`.
+
+# References
+
+- [Networkx official documentation](https://networkx.org/)
+- Cours 8INF840-01 - Structure de données (Cours sur les graphes de Djamal Rebaine)
