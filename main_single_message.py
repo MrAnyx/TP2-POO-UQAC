@@ -10,6 +10,8 @@ DISTANCE_THRESHOLD = NB_NODES / 2.2
 
 network = Network(nb_nodes=NB_NODES, distance_threshold=DISTANCE_THRESHOLD)
 
+network.pretty_print()
+
 shortest_path = network.custom_dijkstra()
 print(shortest_path)
 network.plot_print(shortest_path["path"])

@@ -206,6 +206,8 @@ Dans le graphe ci-dessus, le noeud bleu représente le noeud de départ tandis q
 
 ![](https://i.ibb.co/jHzfQdN/Figure-2.png)
 
+Également, la position des noeuds du graphe dans la fenêtre correspond bien aux coordonnées que nous avons renseignés plus tôt lors de la création des noeuds du graphe.
+
 ## Installation et exécution
 
 ### Prérequis
