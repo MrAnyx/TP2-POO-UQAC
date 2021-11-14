@@ -2,7 +2,7 @@ from Network import Network
 from Node import Node
 import random
 
-NB_NODES = 10
+NB_NODES = 3
 
 # En moyenne, les noeuds du graph sont espacés de NB_NODES / 2 unités de distance
 # On va volontairement mettre une valeur plus faible pour que certains message ne puissent pas transiter entre deux noeuds

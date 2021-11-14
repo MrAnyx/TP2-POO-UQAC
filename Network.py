@@ -159,7 +159,7 @@ class Network:
         for node in self.nodes:
             result["nodes"][node.index] = {
                 "neighbors": node.neighbors,
-                "coords": [node.coords.y, node.coords.x],
+                "coords": {"x": node.coords.x, "y": node.coords.y},
                 "score": node.score,
             }
 
@@ -178,7 +178,7 @@ class Network:
         color_map = []
 
         for node in self.nodes:
-            pos.append([node.coords.y, node.coords.x])
+            pos.append([node.coords.x, node.coords.y])
             liste_adjacence = np.zeros(self.nb_nodes_initial)
             for neighbor, distance in node.neighbors.items():
                 liste_adjacence[neighbor] = 1

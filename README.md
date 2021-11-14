@@ -172,28 +172,37 @@ Nous avons également créé plusieurs méthodes utilitaires :
    "nodes": {
       "0": {
          "neighbors": {
-            "1": 2.0,  
-            "2": 1.0   
+            "1": 1.0,
+            "2": 2.0
          },
-         "coords": [0, 2],
-         "score": 0    
+         "coords": {
+            "x": 2,
+            "y": 0
+         },
+         "score": 0
       },
       "1": {
          "neighbors": {
-            "0": 2.0   
+            "0": 1.0
          },
-         "coords": [0, 0],
+         "coords": {
+            "x": 1,
+            "y": 0
+         },
          "score": 0
       },
       "2": {
          "neighbors": {
-            "0": 1.0
+            "0": 2.0
          },
-         "coords": [1, 2],
+         "coords": {
+            "x": 0,
+            "y": 0
+         },
          "score": 0
       }
    },
-   "start": 1,
+   "start": 2,
    "end": 0
 }
 ```
