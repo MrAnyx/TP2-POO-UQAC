@@ -1,5 +1,8 @@
 # Question 4
 
+Réalisé par Robin Bidanchon (BIDR16129906)
+Code source du projet : [https://github.com/MrAnyx/TP2-POO-UQAC](https://github.com/MrAnyx/TP2-POO-UQAC)
+
 ## Introduction
 
 L'idée de cet exercice est de simuler l'envoie de plusieurs messages à travers un réseau lors d'une catastrophe naturelle. L'objectif est donc de transmettre plusieurs messages entre deux points d'un réseau. Le réseau sera représenté par un graphe de plusieurs noeuds qui représentent respectivement une région et les villes au sein de cette région.
