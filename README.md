@@ -115,11 +115,11 @@ La classe `Node` sert à symboliser les différentes intersections du graphe par
 
 Plusieurs attributs seront créés grâces aux paramètres qui doivent être renseignés pour créer cet objet :
 
-*   L'index du noeud, qui sert à identifier le noeud,
+-   L'index du noeud, qui sert à identifier le noeud,
 
-*   Les coordonnées du noeud dans la grille lors de la création du graphe. Cet attribut correspond à une instance de la classe \*\*Coordinates \*\*qui sert à plus facilement manipuler l'abscisse et les ordonnées du noeud,
+-   Les coordonnées du noeud dans la grille lors de la création du graphe. Cet attribut correspond à une instance de la classe **Coordinates** qui sert à plus facilement manipuler l'abscisse et les ordonnées du noeud,
 
-*   Le score,
+-   Le score,
 
 *   Les noeuds voisins du noeud actuel.
 
