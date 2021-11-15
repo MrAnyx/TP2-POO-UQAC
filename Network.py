@@ -13,7 +13,9 @@ class Network:
     On y retrouve les méthodes permettant de créer le graphe aléatoire, déterminer le chemin ou envoyer les messages
     """
 
-    def __init__(self, nb_nodes: int = 20, distance_threshold: int = 10) -> None:
+    def __init__(
+        self, nb_nodes: int = 20, distance_threshold: int = 10, optimized: bool = True
+    ) -> None:
         """
         Pour créer un objet Network, il est recommendé de renseigner 2 paramètres :
             - le nombre de noeuds
@@ -28,6 +30,7 @@ class Network:
         self.nb_nodes_initial = nb_nodes
         self.nodes = []
         self.distance_threshold = distance_threshold
+        self.optimized = optimized
 
         start_end = self._generate_start_and_end_nodes()
         self.start = start_end["start"]
@@ -199,7 +202,7 @@ class Network:
             elif self.nodes[node].index == self.end:
                 color_map.append("#f2353b")
             else:
-                if self.nodes[node].index in path:
+                if path and self.nodes[node].index in path:
                     color_map.append("#ed5a2e")
                 else:
                     color_map.append("#6a6a77")
@@ -294,14 +297,19 @@ class Network:
             for neighbor_index, neighbor_distance in unvisited[
                 current_index
             ].neighbors.items():
-                # On calcule la distance entre le voisin et le point de départ
-                dist_from_start = process[current_index]["distance"] + neighbor_distance
+                if (neighbor_distance < self.distance_threshold and self.optimized) or (
+                    not self.optimized
+                ):
+                    # On calcule la distance entre le voisin et le point de départ
+                    dist_from_start = (
+                        process[current_index]["distance"] + neighbor_distance
+                    )
 
-                # Si la distance calculée est inférieure à la distance précédente
-                if dist_from_start < process[neighbor_index]["distance"]:
-                    # On remplace les valeurs
-                    process[neighbor_index]["distance"] = dist_from_start
-                    process[neighbor_index]["predecessor"] = current_index
+                    # Si la distance calculée est inférieure à la distance précédente
+                    if dist_from_start < process[neighbor_index]["distance"]:
+                        # On remplace les valeurs
+                        process[neighbor_index]["distance"] = dist_from_start
+                        process[neighbor_index]["predecessor"] = current_index
             visited.append(current_index)
             unvisited.pop(current_index, None)
 
@@ -314,7 +322,7 @@ class Network:
                 path.append(tmp_index)
                 tmp_index = process[tmp_index]["predecessor"]
             else:
-                return None
+                return {"path": None, "distance": None}
 
         path.append(self.start)
 
@@ -360,7 +368,7 @@ class Network:
         """
 
         # Si aucun chemin n'a été trouvé
-        if not path:
+        if not path["path"]:
             return {"valid": False, "reason": "path_missing"}
 
         # On va récupérer l'élément i et i+1 donc ne prend le dernier élément
@@ -422,3 +430,7 @@ class Network:
                 highest_score_nodes.append(node.index)
 
         return {"nodes": highest_score_nodes, "score": _max_score}
+
+    def print_start_end_nodes(self):
+        print(f"Start : {self.start}")
+        print(f"End : {self.end}")

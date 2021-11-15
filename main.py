@@ -3,14 +3,16 @@ from Node import Node
 import random
 
 
-NB_MESSAGES = 20
-NB_NODES = 6
+NB_MESSAGES = 10
+NB_NODES = 50
 
 # En moyenne, les noeuds du graph sont espacés de NB_NODES / 2 unités de distance
 # On va volontairement mettre une valeur plus faible pour que certains message ne puissent pas transiter entre deux noeuds
 DISTANCE_THRESHOLD = NB_NODES / 2.2
 
-network = Network(nb_nodes=NB_NODES, distance_threshold=DISTANCE_THRESHOLD)
+network = Network(
+    nb_nodes=NB_NODES, distance_threshold=DISTANCE_THRESHOLD, optimized=True
+)
 
 shortest_path = None
 
@@ -53,4 +55,12 @@ for i in range(NB_MESSAGES):
         network.display_error_message(path_validity=path_validity, message_num=i)
 
 # On affiche le ou les noeuds ayant le score le plus élevé
-print(network.get_nodes_with_highest_score())
+highest_score_nodes = network.get_nodes_with_highest_score()
+print()
+network.print_start_end_nodes()
+print(
+    "Nodes :",
+    highest_score_nodes["nodes"],
+    "have the highest score of",
+    highest_score_nodes["score"],
+)
