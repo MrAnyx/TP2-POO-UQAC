@@ -40,6 +40,8 @@ Au sein de notre réseau, nous devons également sauvegarder certains paramètre
 
 *   Le seuil de distance à partir duquel un message ne peut plus transiter d'un noeud à un autre,
 
+*   Un paramètre permettant d'optimiser la recherche du chemin le plus court,
+
 *   Le noeud de départ,
 
 *   Le noeud d'arrivé,
@@ -53,7 +55,7 @@ Au sein de notre réseau, nous devons également sauvegarder certains paramètre
 Comme nous avons pu l'évoquer, le but est de transmettre *n* messages entre deux noeuds d'un graphe. Le chemin doit être le plus court possible et la distance entre chaque noeud du chemin doit être inférieure au seuil que nous allons définir.
 
 ```python
-network = Network(nb_nodes=NB_NODES, distance_threshold=DISTANCE_THRESHOLD)
+network = Network(nb_nodes=NB_NODES, distance_threshold=DISTANCE_THRESHOLD, optimized=True)
 ```
 
 Dans un premier temps, nous commençons pas créer un graphe aléatoire en utilisant la méthode que nous avons décrite précédemment.
@@ -86,6 +88,12 @@ Après avoir déterminé notre chemin, deux cas de figures peuvent se présenter
 *   L'algorithme de Dijkstra trouve un chemin optimal entre les deux points mais la distance entre deux noeuds est supérieur au seuil de distance. Dans ce cas, le message ne peut pas transiter entre les deux noeuds impliqué et donc, le chemin n'est pas valide.
 
 Ainsi, si aucun chemin n'existe ou s'il n'est pas valide, alors le message est perdu. Il faudra alors attendre le prochain envoie d'un message pour réessayer de trouver un chemin optimal.
+
+Nous avons également ajouté un paramètre d'optimisation pour la recherche du chemin le plus court. En effet, si le paramètre `optimized` est à **True**, alors la recherche du chemin le plus court prendra en compte le seuil de distance et privilégiera les noeuds dont la distance est inférieure au seuil. A l'inverse, si le paramètre `optimized` est **False**, alors la recherche du chemin le plus court sera faite indépendament du seuil de distance.
+
+Autrement-dit, si le paramètre `optimized` est à **True**, alors l'algorithme de Dijkstra préférera retourner un chemin plus long mais qui respecte le seuil de distance entre chaque noeud plutôt qu'un chemin plus court mais qui ne respecte pas le seuil de distance.
+
+Dans les deux cas, le seuil de distance sera utilisé pour déterminer si un chemin est valide dans la méthode `is_path_reachable` dans la classe `Network`.
 
 ### Optimisation
 
@@ -142,6 +150,8 @@ Comme nous avons pu le voir dans les parties précédentes, cette classes néces
 *   La liste des noeuds du graphe
 
 *   Le seuil de distance au delà duquel un message ne peut plus transiter entre deux noeuds,
+
+*   Un indicateur permettant d'optimiser la recherche du chemin le plus court,
 
 *   L'index du noeud de départ,
 
