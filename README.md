@@ -1,6 +1,6 @@
 # Question 4
 
-Réalisé par Robin Bidanchon (BIDR16129906)
+Entièrement réalisé par Robin Bidanchon (BIDR16129906)
 
 Code source du projet : [https://github.com/MrAnyx/TP2-POO-UQAC](https://github.com/MrAnyx/TP2-POO-UQAC)
 
