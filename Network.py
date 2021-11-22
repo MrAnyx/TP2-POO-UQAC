@@ -41,7 +41,7 @@ class Network:
 
         self._generate_random_graph()
 
-    def _generate_start_and_end_nodes(self):
+    def _generate_start_and_end_nodes(self) -> dict:
         """
         Cette méthode permet de générer de manière aléatoire un noeud de départ et d'arrivé.
         Les valeurs retournées représentes les indexes des noeuds de départ et d'arrivé.
@@ -124,7 +124,7 @@ class Network:
             node = Node(index=i, coords=[y, x])
             self._add_node(node)
 
-    def remove_random_node(self):
+    def remove_random_node(self) -> None:
         """
         Cette méthode permet de supprimer de manière aléatoire un noeud du graphe.
         Cela permet de simuler l'inaccessibilité d'un noeud. Il n'est donc plus accessible lorsque le message essaye de transiter.
@@ -154,7 +154,7 @@ class Network:
         self.nb_nodes -= 1
         print(f"Node with index : {node_to_remove.index} has been removed")
 
-    def pretty_print(self):
+    def pretty_print(self) -> None:
         """
         Cette méthode permet d'afficher des informations sur le graphe et les noeuds qui le constitu à un instant donné
         """
@@ -170,7 +170,7 @@ class Network:
         result["end"] = self.end
         print(json.dumps(result, sort_keys=False, indent=3))
 
-    def plot_print(self, path: list = []):
+    def plot_print(self, path: list = []) -> None:
         """
         Cette méthode permet d'afficher dynamiquement le graphe généré.
         Pour ce faire, nous générons la matrice d'adjacence de notre graphe puis nous l'affichons grâce aux librairies networkx et matplotlib.
@@ -211,7 +211,7 @@ class Network:
         nx.draw_networkx_labels(G, pos, labels, font_size=10, font_color="black")
         plt.show()
 
-    def _get_node_by_index(self, index: int):
+    def _get_node_by_index(self, index: int) -> Node | None:
         """
         Cette méthode permet de récupérer un noeud du graphe en fonction de son index
         """
@@ -221,7 +221,7 @@ class Network:
 
         return None
 
-    def _get_node_index_in_nodes_list(self, node_index: int):
+    def _get_node_index_in_nodes_list(self, node_index: int) -> int | None:
         """
         Cette méthode permet de récupérer la position du noeuds en fonction de son index dans la liste des noeuds du graphe.
         """
@@ -231,7 +231,9 @@ class Network:
 
         return None
 
-    def custom_depth_first_search(self, start_index: int, path: list = []):
+    def custom_depth_first_search(
+        self, start_index: int, path: list = []
+    ) -> list | None:
         """
         Cette méthode correspond à la prémière implémentation de l'algorithme permettant de déterminer le chemin le plus court.
         En effet, avant d'implémenter l'algorithme de Dijkstra, nous nous sommes penché sur un algorithme de recherche classique : DFS
@@ -265,7 +267,7 @@ class Network:
         # On retourne le chemin le plus court
         return shortest_path
 
-    def custom_dijkstra(self):
+    def custom_dijkstra(self) -> dict:
         """
         Cette méthode est une implémentation de l'algorithme Dijkstra.
         Cet algorithme permet de déterminer le chemin le plus court entre deux noeuds d'un graphe.
@@ -332,7 +334,7 @@ class Network:
         # On retourner le chemin et la longueur de ce chemin
         return {"path": path, "distance": distance}
 
-    def _get_node_by_min_distance(self, process: dict, visited: list) -> list:
+    def _get_node_by_min_distance(self, process: dict, visited: list) -> int | None:
         """
         Cette méthode permet de retourner l'index du noeud ayant la plus petite distance avec le noeud de départ
         Nous déterminons ce noeud à l'aide de la variable process qui a été créée et modifiée dans la méthode précédente : custom_dijkstra
@@ -347,7 +349,7 @@ class Network:
 
         return _min_index
 
-    def get_average_distance(self):
+    def get_average_distance(self) -> float:
         """
         Cette méthode permet de calculer la distance moyenne entre chaque noeud du graphe
         Elle a été utilisée afin d'avoir un ordre d'idée du seuil de distance à renseigner en fonction du nombre de noeuds
@@ -362,7 +364,7 @@ class Network:
 
         return total_distance / nb_nodes
 
-    def is_path_reachable(self, path: dict):
+    def is_path_reachable(self, path: dict) -> dict:
         """
         Cette méthode permet de déterminer si un chemin est valide ou non.
         """
@@ -386,7 +388,7 @@ class Network:
 
         return {"valid": True, "reason": "ok"}
 
-    def send_message(self, path: dict, message_num: int):
+    def send_message(self, path: dict, message_num: int) -> None:
         """
         Cette méthode permet de simuler l'envoie d'un message à travers le réseau.
         A chaque envoie d'un message, les noeuds contenus dans le chemin le plus court verront leur score incrémenté
@@ -400,7 +402,7 @@ class Network:
             f"Path for message {message_num} : {path['path']} -> {path['distance']} Km"
         )
 
-    def display_error_message(self, path_validity: dict, message_num: int):
+    def display_error_message(self, path_validity: dict, message_num: int) -> None:
         """
         Cette méthode permet d'afficher un message en fonction de la raison de l'invalidité déterminée avec la méthode is_path_reachable
         """
@@ -411,7 +413,7 @@ class Network:
         elif path_validity["reason"] == "path_missing":
             print(f"Error on message {message_num} : No path found")
 
-    def get_nodes_with_highest_score(self):
+    def get_nodes_with_highest_score(self) -> dict:
         """
         Cette méthode permet de détermier le ou les noeuds ayant le score le plus élevé
         """
@@ -431,6 +433,6 @@ class Network:
 
         return {"nodes": highest_score_nodes, "score": _max_score}
 
-    def print_start_end_nodes(self):
+    def print_start_end_nodes(self) -> None:
         print(f"Start : {self.start}")
         print(f"End : {self.end}")
