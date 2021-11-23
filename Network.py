@@ -211,7 +211,7 @@ class Network:
         nx.draw_networkx_labels(G, pos, labels, font_size=10, font_color="black")
         plt.show()
 
-    def _get_node_by_index(self, index: int) -> Node | None:
+    def _get_node_by_index(self, index: int) -> Node:
         """
         Cette méthode permet de récupérer un noeud du graphe en fonction de son index
         """
@@ -221,7 +221,7 @@ class Network:
 
         return None
 
-    def _get_node_index_in_nodes_list(self, node_index: int) -> int | None:
+    def _get_node_index_in_nodes_list(self, node_index: int) -> int:
         """
         Cette méthode permet de récupérer la position du noeuds en fonction de son index dans la liste des noeuds du graphe.
         """
@@ -231,9 +231,7 @@ class Network:
 
         return None
 
-    def custom_depth_first_search(
-        self, start_index: int, path: list = []
-    ) -> list | None:
+    def custom_depth_first_search(self, start_index: int, path: list = []) -> list:
         """
         Cette méthode correspond à la prémière implémentation de l'algorithme permettant de déterminer le chemin le plus court.
         En effet, avant d'implémenter l'algorithme de Dijkstra, nous nous sommes penché sur un algorithme de recherche classique : DFS
@@ -334,7 +332,7 @@ class Network:
         # On retourner le chemin et la longueur de ce chemin
         return {"path": path, "distance": distance}
 
-    def _get_node_by_min_distance(self, process: dict, visited: list) -> int | None:
+    def _get_node_by_min_distance(self, process: dict, visited: list) -> int:
         """
         Cette méthode permet de retourner l'index du noeud ayant la plus petite distance avec le noeud de départ
         Nous déterminons ce noeud à l'aide de la variable process qui a été créée et modifiée dans la méthode précédente : custom_dijkstra
